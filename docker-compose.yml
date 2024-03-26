@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./db-scripts:/docker-entrypoint-initdb.d
+
+  pg_admin:
+    image: dpage/pgadmin4
+    container_name: pg_admin
+    ports:
+      - "5000:80"
+    env_file:
+      - .env
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+  get_data:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ./commands/run_get_data.sh
+    container_name: get_data
+    volumes:
+      - .:/scrapper
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+
+  print_data:
+    container_name: print_data
+    build: .
+    command:
+      - ./commands/run_print_data.sh
+    volumes:
+      - .:/scrapper
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - get_data
+
+
+volumes:
+  static: { }
+  pg_data: { }
+  pgadmin_data: { }
