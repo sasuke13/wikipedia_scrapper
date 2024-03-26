@@ -33,6 +33,7 @@ class Database:
 
     async def create_database(self) -> None:
         async with self._engine.connect() as conn:
+            await conn.run_sync(BaseModel.metadata.drop_all)
             await conn.run_sync(BaseModel.metadata.create_all)
             await conn.commit()
 
