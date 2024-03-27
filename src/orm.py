@@ -1,8 +1,6 @@
-import asyncio
 from dataclasses import dataclass
 
-from sqlalchemy import select, desc, asc, func
-from sqlalchemy.orm import selectinload
+from sqlalchemy import select, desc, asc
 
 from settings import settings
 from database import Database

@@ -26,7 +26,6 @@ async def main():
             print(f'\nThe most populated[0] and less populated[1] locations in {extreme_location} region:')
             convert_to_data_frame(extreme_locations[extreme_location])
 
-
     except NotFoundException as exception:
         print(exception)
 
