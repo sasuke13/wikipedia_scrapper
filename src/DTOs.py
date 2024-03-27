@@ -4,7 +4,8 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class RegionDTO:
     location: str
-    population: int
-    percent_of_the_world: str
-    last_updated: str
-    source_of_data: str
+    population_in_2022: int
+    population_in_2023: int
+    change: str
+    region: str
+    statistical_subregion: str

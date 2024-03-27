@@ -10,25 +10,22 @@ def convert_to_data_frame(data: list):
 
     pd.set_option('display.max_columns', None)
 
-    less_columned_df = df.iloc[:, 1:3]
-
-    print(less_columned_df)
+    print(df)
 
 
 async def main():
     try:
-        the_most_populated_location = await AsyncOrm().select_the_most_populated_location()
-        the_less_populated_location = await AsyncOrm().select_the_less_populated_location()
         all_locations = await AsyncOrm().select_all_locations()
+
+        extreme_locations = await AsyncOrm().get_extreme_locations_for_all_regions()
 
         print('All the locations in short:')
         convert_to_data_frame(all_locations)
 
-        print('\nThe most populated location:')
-        convert_to_data_frame(the_most_populated_location)
+        for extreme_location in extreme_locations:
+            print(f'\nThe most populated[0] and less populated[1] locations in {extreme_location} region:')
+            convert_to_data_frame(extreme_locations[extreme_location])
 
-        print('\nThe less populated location:')
-        convert_to_data_frame(the_less_populated_location)
 
     except NotFoundException as exception:
         print(exception)

@@ -9,7 +9,8 @@ from web_scrapper import Scrapper
 
 class DataParser:
     async def __parse_data(self, bs4_instance) -> list[RegionDTO]:
-        table_rows = bs4_instance.find_all('tr')
+        table = bs4_instance.find('table')
+        table_rows = table.find_all('tr')
         list_of_regions = []
 
         for table_row in table_rows:
@@ -28,10 +29,12 @@ class DataParser:
 
                 if re.fullmatch(r'\d{1,3}(,\d{3})*', cleaned_text):
                     cleaned_text = int(cleaned_text.replace(',', ''))
+                elif cleaned_text == 'N/A':
+                    cleaned_text = None
 
                 region.append(cleaned_text)
 
-            if region:
+            if len(region) == 6:
                 regions = RegionDTO(*region)
                 list_of_regions.append(regions)
 
@@ -40,7 +43,8 @@ class DataParser:
     async def fill_db(self):
         scrapper = Scrapper()
         bs4_instance = await scrapper.get_website_content(
-            'https://en.m.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population'
+            'https://en.wikipedia.org/w/'
+            'index.php?title=List_of_countries_by_population_(United_Nations)&oldid=1215058959'
         )
         list_of_regions = await self.__parse_data(bs4_instance)
 
